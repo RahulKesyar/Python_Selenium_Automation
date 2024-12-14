@@ -1,9 +1,13 @@
-Selenium-Pytest Framework
+# Selenium-Pytest Framework
 
-This repository contains a Selenium-based test automation framework built with Pytest. The framework is designed to separate concerns and improve maintainability by using a modular structure. It supports testing web applications with a focus on UI validations and functional testing.
+## Overview
+This project is a modular Selenium-Pytest framework for web application testing. It is designed with scalability, maintainability, and ease of use in mind, making it ideal for both beginners and advanced users.
 
-Project Structure
+---
 
+## Project Structure
+
+```
 selenium-pytest-framework/
 ├── tests/
 │   ├── test_login.py               # Test cases for Login functionality
@@ -12,174 +16,183 @@ selenium-pytest-framework/
 │   ├── base_page.py                # Base class for all pages
 │   ├── login_page.py               # Page class for Login functionality
 ├── utils/
-│   ├── helpers.py                  # General-purpose utilities
+│   ├── helpers.py                  # General-purpose utilities (non-Selenium)
 │   ├── logger.py                   # Centralized logging mechanism
 ├── test_data/
-│   ├── test_data.json              # Test data in JSON format
-│   ├── config.yaml                 # Configuration data (e.g., URLs, environment variables)
+│   ├── test_data.json              # Test data for all test cases
+│   ├── config.yaml                 # Configuration for environment settings
 ├── conftest.py                     # Pytest fixtures and driver setup
-├── requirements.txt                # Required Python dependencies
+├── requirements.txt                # Python dependencies
 ├── pytest.ini                      # Pytest configurations
-├── README.md                       # Project documentation
+├── README.md                       # Documentation for the project
+```
 
-Features
+---
 
-Framework Highlights
+## Features
+- **Modular Design**: Separate folders for tests, pages, utilities, and test data.
+- **Pytest Fixtures**: Reusable fixtures for WebDriver setup and teardown.
+- **Configurable Environment**: Configurable test environment using `config.yaml`.
+- **Centralized Logging**: Unified logging for debugging and tracking test execution.
+- **Reusable Base Page**: Encapsulates common Selenium operations (click, send keys, waits, etc.).
+- **Data-Driven Testing**: Uses `test_data.json` for parameterized tests.
 
-Page Object Model (POM):
-Encapsulates page-specific actions and elements into reusable classes.
+---
 
-Modular Design:
-Separate concerns into tests, pages, utils, and test_data.
+## Setup Instructions
 
-Data-Driven Testing:
-Uses test_data.json and config.yaml for test inputs and configurations.
+### Prerequisites
+- Python 3.8+
+- Google Chrome and ChromeDriver (or another browser and corresponding WebDriver).
 
-Logging:
-Provides centralized logging for actions and results through logger.py.
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://your-repository-url.git
+   cd selenium-pytest-framework
+   ```
 
-Cross-Browser Testing:
-Support for multiple browsers via Selenium WebDriver.
+2. Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate   # For Linux/Mac
+   venv\Scripts\activate     # For Windows
+   ```
 
-Reusable Utilities:
-General-purpose utility functions in helpers.py.
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Supported Test Categories
+4. Update the `test_data/config.yaml` with your application's base URL and other configurations.
 
-UI Validations: Tests for layout, labels, and visual elements.
+---
 
-Functional Testing: Tests for business logic and workflows.
+## Running Tests
 
-Setup Instructions
-
-Prerequisites
-
-Python 3.7+
-
-Pip (Python package manager)
-
-ChromeDriver, GeckoDriver, or any browser driver installed and added to the system PATH.
-
-Installation
-
-Clone the repository:
-
-git clone <repository_url>
-cd selenium-pytest-framework
-
-Install dependencies:
-
-pip install -r requirements.txt
-
-Update the config.yaml file with the base URL and browser settings:
-
-base_url: "https://example.com"
-browser: "chrome"
-
-Usage
-
-Running Tests
-
-To execute all tests:
-
+### Run All Tests
+```bash
 pytest
+```
 
-To execute a specific test file:
-
+### Run Specific Tests
+```bash
 pytest tests/test_login.py
+```
 
-To generate a detailed HTML report:
-
+### Generate HTML Report
+Install `pytest-html` if not already installed:
+```bash
+pip install pytest-html
+```
+Run tests with HTML report:
+```bash
 pytest --html=report.html
+```
 
-Directory Details
+---
 
-tests/
+## Writing New Tests
 
-Contains all test cases categorized by functionality.
+### Steps to Add a New Test Case
+1. **Create a New Page Class (if needed):**
+   Add a new file in the `pages/` folder and extend `BasePage`.
 
-test_login.py: Validates login functionality.
+   Example:
+   ```python
+   from pages.base_page import BasePage
+   from selenium.webdriver.common.by import By
 
-test_ui_validations.py: Checks UI elements and behaviors.
+   class DashboardPage(BasePage):
+       dashboard_title = (By.ID, "dashboard-title")
 
-pages/
+       def get_dashboard_title(self):
+           return self.get_text(self.dashboard_title)
+   ```
 
-Implements the Page Object Model (POM):
+2. **Write the Test Case:**
+   Add a new test in the `tests/` folder.
 
-base_page.py: A reusable base class for common Selenium actions (e.g., click, send_keys).
+   Example:
+   ```python
+   def test_dashboard_title(setup):
+       dashboard_page = DashboardPage(setup)
+       dashboard_page.open("https://example.com/dashboard")
+       assert dashboard_page.get_dashboard_title() == "Welcome, User!"
+   ```
 
-login_page.py: Encapsulates elements and actions for the Login page.
+3. **Add Test Data:**
+   Update `test_data.json` if the test requires specific data.
 
-utils/
+---
 
-Provides helper files for auxiliary operations:
+## Utilities
 
-helpers.py: Contains utilities for generating test data, working with dates, and reading/writing files.
+### Logger
+Centralized logging for consistent test output:
+```python
+from utils.logger import logger
+logger.info("Test started.")
+logger.error("Element not found.")
+```
 
-logger.py: A centralized logging mechanism to log test actions and results.
+### Helpers
+Non-Selenium utility functions, e.g., string manipulation, API calls, or custom waits.
 
-test_data/
+---
 
-Holds externalized data for tests:
+## Extending the Framework
 
-test_data.json: Stores test inputs like usernames, passwords, etc.
+1. **Add New Utilities:** Place reusable utility functions in the `utils/` folder.
+2. **Parameterize Tests:** Use `pytest.mark.parametrize` for data-driven testing.
+3. **Custom Fixtures:** Add custom fixtures in `conftest.py` for shared setup logic.
+4. **Add New Configurations:** Update `config.yaml` and access values via the YAML parser in your tests.
 
-config.yaml: Stores configurations like base URLs and environment variables.
+---
 
-conftest.py
+## Example Configurations
 
-Defines fixtures for driver setup, teardown, and reusable components.
+### config.yaml
+```yaml
+base_url: "https://your-app-url.com"
+browser: "chrome"
+timeout: 10
+```
 
-Extending the Framework
+### test_data.json
+```json
+{
+    "valid_user": {
+        "username": "testuser",
+        "password": "password123"
+    },
+    "invalid_user": {
+        "username": "invalid",
+        "password": "wrongpass"
+    }
+}
+```
 
-Adding a New Test
+---
 
-Create a new test file in the tests/ folder (e.g., test_new_feature.py).
+## Troubleshooting
 
-Use existing page objects or create new ones in the pages/ folder.
+1. **Driver Not Found:**
+   Ensure the WebDriver executable path is added to your system's PATH variable.
 
-Add test data to test_data.json if needed.
+2. **Test Data Missing:**
+   Verify `test_data.json` and `config.yaml` are correctly formatted and present in the `test_data/` folder.
 
-Implement the test using Pytest syntax.
+3. **Timeout Errors:**
+   Increase `timeout` in `config.yaml` for slower environments.
 
-Adding a New Page Object
+---
 
-Create a new file in the pages/ folder (e.g., new_page.py).
+## Contributing
+Contributions are welcome! Please submit issues or pull requests via the GitHub repository.
 
-Extend BasePage to inherit common functionality.
+---
 
-Add locators and methods specific to the new page.
-
-Best Practices
-
-Use meaningful names for test cases and methods.
-
-Keep test data externalized for easy updates.
-
-Use assertions to validate expected behavior.
-
-Separate Selenium interactions (in page objects) from test logic (in test files).
-
-Follow the DRY (Don't Repeat Yourself) principle to reuse code where possible.
-
-Sample Test Execution Output
-
-============================= test session starts =============================
-collected 4 items
-
-tests/test_login.py::test_valid_login PASSED                               [ 25%]
-tests/test_login.py::test_invalid_login PASSED                            [ 50%]
-tests/test_ui_validations.py::test_page_title PASSED                      [ 75%]
-tests/test_ui_validations.py::test_button_labels PASSED                   [100%]
-
-============================== 4 passed in 3.42s ==============================
-
-Contributing
-
-Feel free to submit issues or pull requests to enhance the framework. Follow the project's coding standards and maintain consistency in structure.
-
-License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
+## License
+This project is licensed under the MIT License.
 
