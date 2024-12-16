@@ -1,197 +1,197 @@
-# Selenium-Pytest Framework
-
-## Overview
-This project is a modular Selenium-Pytest framework for web application testing. It is designed with scalability, maintainability, and ease of use in mind, making it ideal for both beginners and advanced users.
+Here is a comprehensive **README.md** file for your Selenium Automation Pytest project. This file will guide team members on how to set up, run, and contribute to the project.
 
 ---
 
-## Project Structure
+# 🚀 **Selenium Automation Framework**
 
+## 📋 **Table of Contents**
+- [📘 About the Project](#-about-the-project)
+- [🛠️ Technologies Used](#%EF%B8%8F-technologies-used)
+- [📂 Project Structure](#-project-structure)
+- [📦 Installation](#-installation)
+- [🚀 Running the Tests](#-running-the-tests)
+- [🧪 Test Scenarios](#-test-scenarios)
+- [📄 Environment Variables](#-environment-variables)
+- [🖥️ Browser Support](#%EF%B8%8F-browser-support)
+- [📝 Key Files](#-key-files)
+- [👨‍💻 Contributing](#-contributing)
+- [📜 License](#-license)
+
+---
+
+## 📘 **About the Project**
+This **Selenium Automation Framework** is designed to automate end-to-end testing for web applications. It follows the **Page Object Model (POM)** design pattern, ensuring maintainable, reusable, and readable code.
+
+The framework supports multi-browser execution (**Chrome, Firefox, Edge**) and offers flexibility for running tests locally or via CI/CD pipelines like **GitHub Actions, Jenkins, or Azure DevOps**.
+
+---
+
+## 🛠️ **Technologies Used**
+- **Programming Language**: Python
+- **Testing Framework**: Pytest
+- **Browser Drivers**: ChromeDriver, EdgeDriver, GeckoDriver
+- **Selenium WebDriver**: For browser automation
+- **Reporting**: HTML report generation using pytest-html
+- **Logging**: Custom logging for test execution tracking
+
+---
+
+## 📂 **Project Structure**
 ```
-selenium-pytest-framework/
-├── tests/
-│   ├── test_login.py               # Test cases for Login functionality
-│   ├── test_ui_validations.py      # Test cases for UI validations
-├── pages/
-│   ├── base_page.py                # Base class for all pages
-│   ├── login_page.py               # Page class for Login functionality
-├── utils/
-│   ├── helpers.py                  # General-purpose utilities (non-Selenium)
-│   ├── logger.py                   # Centralized logging mechanism
-├── test_data/
-│   ├── test_data.json              # Test data for all test cases
-│   ├── config.yaml                 # Configuration for environment settings
-├── conftest.py                     # Pytest fixtures and driver setup
-├── requirements.txt                # Python dependencies
-├── pytest.ini                      # Pytest configurations
-├── README.md                       # Documentation for the project
+├───tests
+│    ├───test_login.py            # Contains test cases for login page
+│
+├───pages
+│    ├───base_page.py             # Base Page with generic methods
+│    ├───login_page.py            # Login page-specific methods and locators
+│
+├───utils
+│    ├───config.py                # Configuration file with base URL, browser choice, etc.
+│    ├───logger.py                # Logger for tracking actions and errors
+│
+├───conftest.py                   # Pytest fixtures to set up and tear down WebDriver
+├───requirements.txt              # Python dependencies
+├───README.md                     # Documentation for the project
+├───.gitignore                    # Files to ignore in the Git repository
 ```
 
 ---
 
-## Features
-- **Modular Design**: Separate folders for tests, pages, utilities, and test data.
-- **Pytest Fixtures**: Reusable fixtures for WebDriver setup and teardown.
-- **Configurable Environment**: Configurable test environment using `config.yaml`.
-- **Centralized Logging**: Unified logging for debugging and tracking test execution.
-- **Reusable Base Page**: Encapsulates common Selenium operations (click, send keys, waits, etc.).
-- **Data-Driven Testing**: Uses `test_data.json` for parameterized tests.
+## 📦 **Installation**
+To get a local copy of this project up and running, follow these simple steps.
 
----
-
-## Setup Instructions
-
-### Prerequisites
-- Python 3.8+
-- Google Chrome and ChromeDriver (or another browser and corresponding WebDriver).
-
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://your-repository-url.git
-   cd selenium-pytest-framework
-   ```
-
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate   # For Linux/Mac
-   venv\Scripts\activate     # For Windows
-   ```
-
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Update the `test_data/config.yaml` with your application's base URL and other configurations.
-
----
-
-## Running Tests
-
-### Run All Tests
+### 1️⃣ **Clone the Repository**
 ```bash
-pytest
+git clone https://github.com/your-username/selenium-automation-pytest.git
+cd selenium-automation-pytest
 ```
 
-### Run Specific Tests
+### 2️⃣ **Set up Virtual Environment**
 ```bash
-pytest tests/test_login.py
+python -m venv venv
+source venv/bin/activate   # On Windows use `venv\Scripts\activate`
 ```
 
-### Generate HTML Report
-Install `pytest-html` if not already installed:
+### 3️⃣ **Install Dependencies**
 ```bash
-pip install pytest-html
+pip install -r requirements.txt
 ```
-Run tests with HTML report:
+
+### 4️⃣ **Download WebDriver**
+- Download **ChromeDriver** for your version of Chrome [here](https://sites.google.com/chromium.org/driver/).
+- Download **EdgeDriver** for Edge browser [here](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/).
+- Download **GeckoDriver** for Firefox [here](https://github.com/mozilla/geckodriver/releases).
+
+---
+
+## 🚀 **Running the Tests**
+Run tests using **Pytest**. Follow the commands below to run tests for login functionality.
+
+### 1️⃣ **Run All Tests**
+```bash
+pytest --html=report.html --self-contained-html
+```
+
+### 2️⃣ **Run a Specific Test**
+```bash
+pytest tests/test_login.py::TestLogin::test_valid_login_without_remember_me
+```
+
+### 3️⃣ **Generate HTML Report**
 ```bash
 pytest --html=report.html
 ```
 
 ---
 
-## Writing New Tests
-
-### Steps to Add a New Test Case
-1. **Create a New Page Class (if needed):**
-   Add a new file in the `pages/` folder and extend `BasePage`.
-
-   Example:
-   ```python
-   from pages.base_page import BasePage
-   from selenium.webdriver.common.by import By
-
-   class DashboardPage(BasePage):
-       dashboard_title = (By.ID, "dashboard-title")
-
-       def get_dashboard_title(self):
-           return self.get_text(self.dashboard_title)
-   ```
-
-2. **Write the Test Case:**
-   Add a new test in the `tests/` folder.
-
-   Example:
-   ```python
-   def test_dashboard_title(setup):
-       dashboard_page = DashboardPage(setup)
-       dashboard_page.open("https://example.com/dashboard")
-       assert dashboard_page.get_dashboard_title() == "Welcome, User!"
-   ```
-
-3. **Add Test Data:**
-   Update `test_data.json` if the test requires specific data.
+## 🧪 **Test Scenarios**
+| **Test Case**           | **Description**                         | **Test Method** |
+|------------------------|-----------------------------------------|------------------|
+| **Valid Login**          | Test login with valid credentials      | `test_valid_login_with_remember_me()` |
+| **Invalid Login**        | Test login with invalid credentials    | `test_invalid_login()` |
+| **Empty Username**       | Test login with empty username field   | `test_login_with_empty_username()` |
+| **Empty Password**       | Test login with empty password field   | `test_login_with_empty_password()` |
+| **SQL Injection**        | Verify SQL Injection attempt on login  | `test_sql_injection_login()` |
+| **XSS Attack**           | Verify XSS attack is handled properly  | `test_xss_attack_login()` |
 
 ---
 
-## Utilities
+## 📄 **Environment Variables**
+| **Variable**  | **Description**                      | **Default Value**  |
+|---------------|--------------------------------------|---------------------|
+| `BASE_URL`     | Base URL of the application          | `https://example.com` |
+| `BROWSER`      | Browser to run tests (chrome/firefox/edge) | `chrome` |
 
-### Logger
-Centralized logging for consistent test output:
+> **Note:** The `BROWSER` value can be changed in `utils/config.py` like this:
 ```python
-from utils.logger import logger
-logger.info("Test started.")
-logger.error("Element not found.")
-```
-
-### Helpers
-Non-Selenium utility functions, e.g., string manipulation, API calls, or custom waits.
-
----
-
-## Extending the Framework
-
-1. **Add New Utilities:** Place reusable utility functions in the `utils/` folder.
-2. **Parameterize Tests:** Use `pytest.mark.parametrize` for data-driven testing.
-3. **Custom Fixtures:** Add custom fixtures in `conftest.py` for shared setup logic.
-4. **Add New Configurations:** Update `config.yaml` and access values via the YAML parser in your tests.
-
----
-
-## Example Configurations
-
-### config.yaml
-```yaml
-base_url: "https://your-app-url.com"
-browser: "chrome"
-timeout: 10
-```
-
-### test_data.json
-```json
-{
-    "valid_user": {
-        "username": "testuser",
-        "password": "password123"
-    },
-    "invalid_user": {
-        "username": "invalid",
-        "password": "wrongpass"
-    }
-}
+BROWSER = "edge"  # Options: chrome, firefox, edge
 ```
 
 ---
 
-## Troubleshooting
+## 🖥️ **Browser Support**
+This framework supports cross-browser testing. The supported browsers are:
+- **Google Chrome** 
+- **Mozilla Firefox** 
+- **Microsoft Edge**
 
-1. **Driver Not Found:**
-   Ensure the WebDriver executable path is added to your system's PATH variable.
-
-2. **Test Data Missing:**
-   Verify `test_data.json` and `config.yaml` are correctly formatted and present in the `test_data/` folder.
-
-3. **Timeout Errors:**
-   Increase `timeout` in `config.yaml` for slower environments.
+To switch the browser, change the `BROWSER` variable in **utils/config.py**.
 
 ---
 
-## Contributing
-Please drop your comments and suggestions
+## 📝 **Key Files**
+| **File**              | **Description**                          |
+|----------------------|------------------------------------------|
+| **base_page.py**      | Contains reusable methods for all pages  |
+| **login_page.py**     | Contains locators and methods for login  |
+| **test_login.py**     | Contains test cases for login features  |
+| **conftest.py**       | Manages setup and teardown of the driver  |
+| **config.py**         | Global settings and environment variables |
+| **logger.py**         | Custom logging implementation           |
 
-## License
-Copyright © 2024 @RahulKesyar
-All rights reserved.
+---
 
+## 🔥 **Core Concepts**
+
+1️⃣ **Page Object Model (POM)**  
+- Pages are defined as classes in the `pages/` folder.  
+- Each page contains locators and page-specific methods.  
+- Example: **`login_page.py`** contains methods like `login`, `open_login_page`, and `get_error_message`.
+
+2️⃣ **Test Cases**  
+- Test files are located in the `tests/` folder.  
+- They call the methods from page objects to perform actions.  
+- Example: `TestLogin` calls `LoginPage.login(username, password)` to test login.
+
+3️⃣ **Driver Setup**  
+- Driver setup is in **conftest.py** using `pytest.fixture`.  
+- Supports **multi-browser support** (Chrome, Firefox, Edge).  
+- Kills orphan processes of **chromedriver.exe, msedgedriver.exe, and geckodriver.exe**.  
+
+---
+
+## 👨‍💻 **Contributing**
+Want to contribute? Follow these steps to make a meaningful contribution.
+
+1. **Fork the Repository**  
+2. **Clone your Fork**  
+3. **Create a New Branch**  
+4. **Make your Changes**  
+5. **Test the Changes**  
+6. **Push the Changes**  
+7. **Submit a Pull Request (PR)**  
+
+Please follow the PEP-8 guidelines for Python coding.
+
+---
+
+## 📜 **License**
+This project is licensed under the **MIT License**.
+
+---
+
+## 📢 **Feedback & Support**
+If you have any suggestions, questions, or issues, feel free to raise a GitHub issue or contact the maintainers.
+
+---
+## @RahulKesyar
