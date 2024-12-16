@@ -1,51 +1,43 @@
-"""
-login_page: Encapsulates the login pages-specific elements and methods
-"""
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
 
-
 class LoginPage(BasePage):
-    """Page object for the Login Page."""
-    # Locator
+    """Page object for the login page."""
+
     username_input = (By.ID, "username")
     password_input = (By.ID, "password")
     remember_me_checkbox = (By.NAME, "rememberme")
     login_button = (By.CLASS_NAME, "MuiButton-label")
-    password_error_msg = (By.ID, "username-helper-text")
+    error_message_locator = (By.CLASS_NAME, 'error-message')
 
-    def open_login_page(self, url):
-        """Navigate to the login Page."""
-        self.open(url)
+    def open_login_page(self, url, approach="clear_cookies", request=None):
+        """Navigate to the login page."""
+        try:
+            print(f"🔗 Opening URL: {url} using approach: {approach}")
+            self.driver.get(url)
+        except Exception as e:
+            print(f"❌ Failed to open URL: {url} - Error: {e}")
+            raise e
 
     def login(self, username, password, remember_me=True):
-        """
-        Perform the login action.
-        :param username: Username for login
-        :param password: Password for login
-        :param remember_me: (default: True).
-        :return:
-        """
-        self.send_keys(self.username_input, username)
-        self.send_keys(self.password_input, password)
-        if remember_me:
-            self.click(self.remember_me_checkbox)
-        self.click(self.login_button)
+        """Login with credentials and optionally select Remember Me."""
+        try:
+            self.send_keys(self.username_input, username)
+            self.send_keys(self.password_input, password)
 
-    def login_without_remember_me(self, username, password):
-        """
-        Perform the login without selecting the 'Remember Me' Checkbox.
-        This is an alternative to the login 'login' method for thr specific tests.
-        :param username:
-        :param password:
-        :return:
-        """
-        self.login(username, password, remember_me=False)
+            if remember_me:
+                self.click(self.remember_me_checkbox)
 
-    def get_password_error_message(self):
-        """
-        Get the error message displayed below the password input field.
-        :return:
-        """
-        return self.get_text(self.password_error_msg)
-    
+            self.click(self.login_button)
+            print(f"✅ Logged in with username: {username}")
+        except Exception as e:
+            print(f"❌ Failed to login. Error: {e}")
+            raise e
+
+    def get_error_message(self):
+        """Get the error message displayed below the password input field."""
+        try:
+            return self.find_element(self.error_message_locator).text
+        except Exception as e:
+            print(f"❌ Failed to get error message. Error: {e}")
+            raise e
