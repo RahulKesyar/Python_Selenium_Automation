@@ -1,5 +1,3 @@
-Here is a comprehensive **README.md** file for your Selenium Automation Pytest project. This file will guide team members on how to set up, run, and contribute to the project.
-
 ---
 
 # 🚀 **Selenium Automation Framework**
